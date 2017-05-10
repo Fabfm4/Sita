@@ -49,43 +49,19 @@ def get_user_image_path(instance, filename):
 class User(AbstractBaseUser, PermissionsMixin):
     """Create custom model User."""
 
-    email = models.EmailField(
-        max_length=255,
-        unique=True,
-        null=False
-    )
-    name = models.CharField(
-        max_length=100
-    )
-    last_name = models.CharField(
-        max_length=100
-    )
-    mother_name = models.CharField(
-        max_length=100
-    )
-    is_active = models.BooleanField(
-        default=False
-    )
-    is_staff = models.BooleanField(
-        default=False,
-        verbose_name=('is_staff')
-    )
-    photo = models.ImageField(
-        null=True,
-        blank=True,
-        upload_to=get_user_image_path
-    )
-    register_date = models.DateField(
-        auto_now=True,
-    )
-    last_modify_date = models.DateField(
-        auto_now_add=True
-    )
-    activation_code = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True
-    )
+    name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100)
+    mothers_name = models.CharField(max_length=100)
+    email = models.EmailField(max_length=254, unique=True)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=True)
+    activation_code = models.CharField(max_length=254)
+    reset_pass_code = models.CharField(max_length=254)
+    conekta_customer = models.CharField(max_length=254)
+    created_date = models.DateField(auto_now_add=True)
+    updated_date = models.DateField(auto_now=True)
+    logined_date = models.DateField(null=True)
+    has_subscription = models.BooleanField(default=False)
 
     @property
     def thumbnail_settings(self):
@@ -106,3 +82,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return "{0}".format(self.name)
+
+class Subscription(models.Model):
+    """ Create The subscriptions from User."""
+
+    expiration_date = models.DateField()
+    is_current = models.BooleanField(default=True)
+    is_test = models.BooleanField(default=False)
+    time_in_minutes = models.IntegerField()
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT
+    )
