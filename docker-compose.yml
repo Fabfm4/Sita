@@ -1,0 +1,17 @@
+sita:
+  build: .
+  volumes:
+    - ./src:/var/src
+  links:
+    - db:postgres
+  ports:
+    - 8080:8080
+  tty: true
+db:
+  image: postgres
+  environment:
+    - POSTGRES_PASSWORD=sitaPW
+    - POSTGRES_USER=sitaUSER
+    - POSTGRES_DB=sitaDB
+  volumes:
+    - ./database:/db
